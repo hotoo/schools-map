@@ -114,7 +114,7 @@ export class DrawManager {
             ) {
                 download(`学区数据-${this.data.name}`, JSON.stringify(this.data));
                 await wait(1000);
-                window.open('https://github.com/xieguanglei/schools-map/issues/new');
+                window.open('https://github.com/hotoo/schools-map/issues/new');
             }
         } else {
             await this.dialog.alert('你还没有完成学区绘制（至少绘制一所学校的学区），请完成绘制后再导出。')
