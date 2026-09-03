@@ -31,7 +31,7 @@ export class MapManager {
             this.drawShape(path, school.title);
         }
     }
-    static shapePolygonStyle = { strokeWeight: 2, strokeOpacity: 0.5 };
+    static shapePolygonStyle = { strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.3 };
     private drawShape(value: string, title: string, markerStr?: string): void {
 
         const { marker, polygon } = MapManager.drawSchoolShape(this.bMap, value, title, markerStr);
@@ -72,6 +72,8 @@ export class MapManager {
             data.map(p => new BMap.Point(p[0], p[1])),
             MapManager.shapePolygonStyle
         );
+        polygon.addEventListener("mouseover", () => polygon.setFillOpacity(0.01));
+        polygon.addEventListener("mouseout", () => polygon.setFillOpacity(MapManager.shapePolygonStyle.fillOpacity));
         bMap.addOverlay(polygon);
 
         return { marker, polygon };
