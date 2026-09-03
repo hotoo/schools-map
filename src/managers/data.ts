@@ -3,6 +3,7 @@ import { ajax } from "../tiny-libs/ajax";
 export interface ISchool {
     title: string,
     value: string[],
+    marker?: string,
 }
 
 export interface IRegionDetail {

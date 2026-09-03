@@ -34,7 +34,7 @@ export class MapManager {
         }
 
         for (const path of school.value) {
-            this.drawShape(path, school.title);
+            this.drawShape(path, school.title, school.marker);
         }
     }
     static shapePolygonStyle = { strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.3 };
@@ -71,6 +71,16 @@ export class MapManager {
             new BMap.Point(center[0], center[1])
         );
         bMap.addOverlay(marker);
+        if (!markerStr) {
+            const localSearch = new BMap.LocalSearch(bMap, {
+                onSearchComplete: (results) => {
+                    if (results && results.getCurrentNumPois() > 0) {
+                        marker.setPosition(results.getPoi(0).point);
+                    }
+                }
+            });
+            localSearch.search(title);
+        }
         const label = new BMap.Label(title, { offset: new BMap.Size(20, -10) });
         marker.setLabel(label);
 
