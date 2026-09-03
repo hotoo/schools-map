@@ -5,11 +5,17 @@ declare const BMap;
 export class MapManager {
 
     static zoomLevel = 15;
+    static minZoomLevel = 11;
+    static maxZoomLevel = 19;
     bMap = new BMap.Map("container");
     overlays: any[] = [];
 
     constructor() {
+        this.bMap.addControl(new BMap.NavigationControl());
+        this.bMap.setMinZoom(MapManager.minZoomLevel);
+        this.bMap.setMaxZoom(MapManager.maxZoomLevel);
         this.bMap.enableScrollWheelZoom();
+        this.bMap.enableContinuousZoom();
     }
 
     center(x: number, y: number): void {
