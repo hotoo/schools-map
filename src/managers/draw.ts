@@ -24,6 +24,7 @@ export class DrawManager {
     data: IDrawData = null;
     polygons: any[] = [];
     markers: any[] = [];
+    hoverLabels: any[] = [];
 
     private onDrawStatusChange: (e: IDrawData) => void;
 
@@ -136,6 +137,7 @@ export class DrawManager {
     pop() {
         this.polygons.pop().remove();
         this.markers.pop().remove();
+        this.hoverLabels.pop().remove();
     }
 
     private restoreDrawData(): void {
@@ -156,9 +158,10 @@ export class DrawManager {
     }
     private drawSchool(school: ISchool): void {
         for (const value of school.value) {
-            const { polygon, marker } = MapManager.drawSchoolShape(this.map.bMap, value, school.title);
+            const { polygon, marker, hoverLabel } = MapManager.drawSchoolShape(this.map.bMap, value, school.title);
             this.polygons.push(polygon);
             this.markers.push(marker);
+            this.hoverLabels.push(hoverLabel);
         }
     }
 

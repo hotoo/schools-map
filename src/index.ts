@@ -16,7 +16,10 @@ async function init() {
 
   const dataManager = new DataManager();
   const pageManager = new PageManager();
-  const mapManager = new MapManager();
+  const mapManager = new MapManager(
+    (title, value) => pageManager.showSchoolInfo(title, value),
+    () => pageManager.hideSchoolInfo()
+  );
   const drawManager = new DrawManager(
     mapManager,
     dialogManager,

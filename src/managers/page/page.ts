@@ -18,9 +18,14 @@ export class PageManager {
     $buttonUndoDraw = this.$navBar.query('#undo-draw');
     $buttonOutputDraw = this.$navBar.query('#output-draw');
     $buttonClearDraw = this.$navBar.query('#clear-draw');
+    $schoolInfo: JEle = this.$navBar.query('#school-info');
+    $schoolInfoContent: JEle = this.$navBar.query('#school-info-content');
+    $schoolInfoClose: JEle = this.$navBar.query('#school-info-close');
 
     constructor(){
         $(document.body).prepend(this.$navBar);
+        this.$schoolInfoClose.click(() => this.hideSchoolInfo());
+        this.hideSchoolInfo();
     }
 
     fillRegions(allRegions: Map<string, IRegionOutline>): void {
@@ -41,6 +46,15 @@ export class PageManager {
         } else {
             this.$statucDraw.text('绘图');
         }
+    }
+
+    showSchoolInfo(title: string, value: string): void {
+        this.$schoolInfoContent.text(`<h3>${title}</h3><p>学区边界</p><pre>${value}</pre>`);
+        this.$schoolInfo.ele.classList.add('is-open');
+    }
+
+    hideSchoolInfo(): void {
+        this.$schoolInfo.ele.classList.remove('is-open');
     }
 
     onStartDraw(fn: () => void): void { this.$buttonStartDraw.click(fn); }
