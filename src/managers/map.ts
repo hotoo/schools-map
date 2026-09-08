@@ -12,13 +12,23 @@ export class MapManager {
     markers: any[] = [];
     hoverLabels: any[] = [];
 
-    constructor() {
+    onAreaClick?: (title: string, value: string) => void;
+    onMapClick?: () => void;
+
+    constructor(onAreaClick?: (title: string, value: string) => void, onMapClick?: () => void) {
+        this.onAreaClick = onAreaClick;
+        this.onMapClick = onMapClick;
         this.bMap.addControl(new BMap.NavigationControl());
         this.bMap.setMinZoom(MapManager.minZoomLevel);
         this.bMap.setMaxZoom(MapManager.maxZoomLevel);
         this.bMap.enableScrollWheelZoom();
         this.bMap.enableContinuousZoom();
         this.bMap.addEventListener("zoomend", () => this.updateMarkerVisibility());
+        this.bMap.addEventListener("click", (event) => {
+            if (event.overlay == null && this.onMapClick) {
+                this.onMapClick();
+            }
+        });
     }
 
     center(x: number, y: number): void {
@@ -44,7 +54,13 @@ export class MapManager {
     static shapePolygonStyle = { strokeWeight: 2, strokeOpacity: 0.5, fillOpacity: 0.3 };
 
     private drawShape(value: string, title: string, markerStr?: string): void {
-        const { marker, polygon, hoverLabel } = MapManager.drawSchoolShape(this.bMap, value, title, markerStr);
+        const { marker, polygon, hoverLabel } = MapManager.drawSchoolShape(
+            this.bMap,
+            value,
+            title,
+            markerStr,
+            this.onAreaClick
+        );
         this.overlays.push(marker, polygon, hoverLabel);
         this.markers.push(marker);
         this.hoverLabels.push(hoverLabel);
@@ -72,7 +88,13 @@ export class MapManager {
         }
     }
 
-    static drawSchoolShape(bMap: any, value: string, title: string, markerStr?: string): { marker: any, polygon: any, hoverLabel: any } {
+    static drawSchoolShape(
+        bMap: any,
+        value: string,
+        title: string,
+        markerStr?: string,
+        onAreaClick?: (title: string, value: string) => void
+    ): { marker: any, polygon: any, hoverLabel: any } {
         const data = value.split(";").map(s => s.split(",").map(Number));
 
         let center: number[] | null = null;
@@ -106,6 +128,9 @@ export class MapManager {
         );
         polygon.addEventListener("mouseover", () => polygon.setFillOpacity(0.01));
         polygon.addEventListener("mouseout", () => polygon.setFillOpacity(MapManager.shapePolygonStyle.fillOpacity));
+        if (onAreaClick) {
+            polygon.addEventListener("click", () => onAreaClick(title, value));
+        }
 
         const hoverLabel = new BMap.Label(title, { offset: new BMap.Size(10, -10) });
         hoverLabel.hide();
